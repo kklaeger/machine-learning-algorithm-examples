@@ -1,7 +1,7 @@
 import numpy as np
 from pathlib import Path
-from sklearn.linear_model import SGDRegressor
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
 
 np.set_printoptions(precision=2, suppress=True)
 
@@ -36,25 +36,31 @@ def main():
     X_scaled = scaler.fit_transform(X)
 
     # Define number oif iterations
-    iterations = 1000
+    iterations = 10000
 
-    # Linear regression trained via gradient descent
-    model = SGDRegressor(max_iter=iterations)
+    # Logistic Regression
+    model = LogisticRegression(max_iter=iterations)
 
-    # Train model using gradient descent
+    # Train model
     model.fit(X_scaled, y)
 
     w = model.coef_
     b = model.intercept_[0]
-    print("Learned weights: w =", w)  # w = [-2976.71 -3741.16  3784.52  -993.1]
-    print(f"Learned bias: b = {b:.2f}")  # b = 19684.45
+    print("Learned weights: w =", w)  # w = [[-2.06 -0.39 -2.19  0.47 -1.56]]
+    print(f"Learned bias: b = {b:.2f}")  # b = 0.18
 
-    # Predict the price of a test car
-    test_car = np.array([[80000, 5, 120, 1]])
-    test_car_scaled = scaler.transform(test_car)
-    predicted_price = model.predict(test_car_scaled)
+    # Two test cars: same specifications, but different price
+    test_cars = np.array([
+        [80000, 5, 120, 1, 10000],  # cheap
+        [80000, 5, 120, 1, 50000],  # expensive
+    ], dtype=float)
 
-    print(f"Predicted price: {predicted_price[0]:.2f}") # 20032.86
+    test_cars_scaled = scaler.transform(test_cars)
+
+    # Predict, if the user will buy each car
+    predictions = model.predict(test_cars_scaled)
+    print(f"Cheap car       -> buy={predictions[0]}")  # 1 = yes
+    print(f"Expensive car   -> buy={predictions[1]}")  # 0 = no
 
 
 if __name__ == "__main__":

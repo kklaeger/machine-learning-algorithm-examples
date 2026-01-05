@@ -26,9 +26,22 @@ def load_training_data(file_path):
     return X, y
 
 
+def sigmoid(z):
+    """
+    Apply the sigmoid function.
+
+    Parameters:
+        z (np.ndarray | float): Input value(s).
+
+    Returns:
+        sigmoid (np.ndarray | float): Sigmoid-transformed output in the range [0, 1].
+    """
+    return 1 / (1 + np.exp(-z))
+
+
 def model_output(X, w, b):
     """
-    Computes the raw output of the linear regression model f(x) = w·x + b.
+    Computes the raw output of the model f(x) = sigmoid(w·x + b).
 
     Parameters:
         X (np.ndarray): Feature matrix.
@@ -38,13 +51,32 @@ def model_output(X, w, b):
     Returns:
         y_hat (np.ndarray): Predicted values for each input sample.
     """
+    return sigmoid(X @ w + b)
 
-    return X @ w + b
+
+def compute_loss(y_hat, y):
+    """
+    Compute the cross-entropy loss for individual predictions.
+
+    Parameters:
+        y_hat (np.ndarray): Predicted probabilities in the range (0, 1).
+        y (np.ndarray): True target values (0 or 1).
+
+    Returns:
+        loss (np.ndarray): Cross-entropy loss for each sample.
+    """
+    # Avoid log(0) by clipping probabilities
+    eps = 1e-15
+    y_hat = np.clip(y_hat, eps, 1 - eps)
+
+    loss = -y * np.log(y_hat) - (1 - y) * np.log(1 - y_hat)
+
+    return loss
 
 
 def compute_cost(X, y, w, b):
     """
-    Computes the mean squared error (MSE) cost for linear regression.
+    Computes the cost for logistic regression (cross-entropy / log loss).
 
     Parameters:
         X (np.ndarray):     Feature matrix including.
@@ -53,12 +85,12 @@ def compute_cost(X, y, w, b):
         b (float):          Bias term.
 
     Returns:
-        cost (float): The MSE cost value.
+        cost (float): The cost value.
     """
-    m = len(y)
     y_hat = model_output(X, w, b)
-    errors = y_hat - y
-    cost = (1 / (2 * m)) * np.sum(errors ** 2)
+
+    losses = compute_loss(y_hat, y)
+    cost = np.mean(losses)
 
     return cost
 
@@ -90,7 +122,7 @@ def compute_gradients(X, y, w, b):
 
 def gradient_descent(X, y, w_init, b_init, alpha, iterations):
     """
-    Performs batch gradient descent to learn weights + bias.
+    Performs batch gradient descent to learn weights and bias.
 
     Parameters:
         X (np.ndarray):         Feature matrix including bias term.
@@ -142,9 +174,9 @@ def scale_features(X):
     return X_scaled, mu, sigma
 
 
-def predict_scaled(X, w, b, mu, sigma):
+def predict_scaled(X, w, b, mu, sigma, threshold=0.5):
     """
-    Predict target values using learned weights and bias.
+    Predict the binary class using learned weights and bias.
 
         Parameters:
         X (np.ndarray):     Feature matrix including bias term.
@@ -152,12 +184,15 @@ def predict_scaled(X, w, b, mu, sigma):
         b (float):          Bias term.
         mu (np.ndarray):    Mean value of each feature.
         sigma (np.ndarray): Standard deviation of each feature.
+        threshold (float):  Classification threshold.
 
     Returns:
-        predicted_value (np.ndarray):  The predicted values.
+        predicted_value (np.ndarray):  Predicted class labels (0 or 1).
     """
     X_scaled = (X - mu) / sigma
-    predicted_value = model_output(X_scaled, w, b)
+    y_hat = model_output(X_scaled, w, b)
+
+    predicted_value = (y_hat >= threshold).astype(int)
 
     return predicted_value
 
@@ -179,14 +214,19 @@ def main():
 
     # Train model using gradient descent
     w, b = gradient_descent(X_scaled, y, w_init, b_init, alpha, iterations)
-    print("Learned weights: w =", w)  # w = [-2977.26 -3740.68  3785.22  -992.96]
-    print(f"Learned bias: b = {b:.2f}")  # b = 19685.27
+    print("Learned weights: w =", w)  # w = [-2.74 -0.45 -3.19  0.7  -1.96]
+    print(f"Learned bias: b = {b:.2f}")  # b = 0.18
 
-    # Predict the price of a test car
-    test_car = np.array([80000, 5, 120, 1])
-    predicted_price = predict_scaled(test_car, w, b, mu, sigma)
+    # Two test cars: same specifications, but different price
+    test_cars = np.array([
+        [80000, 5, 120, 1, 10000],  # cheap
+        [80000, 5, 120, 1, 50000],  # expensive
+    ], dtype=float)
 
-    print(f"Predicted price: {predicted_price:.2f}")  # 20032.71
+    # Predict, if the user will buy each car
+    predictions = predict_scaled(test_cars, w, b, mu, sigma)
+    print(f"Cheap car       -> buy={predictions[0]}")  # 1 = yes
+    print(f"Expensive car   -> buy={predictions[1]}")  # 0 = no
 
 
 if __name__ == "__main__":
