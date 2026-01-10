@@ -7,12 +7,12 @@ The goal is to provide simple implementations that illustrate the core ideas beh
 
 ## Algorithms
 
-- [Linear Regression](linear-regression)
+- [Linear Regression](linear_regression)
     - Custom implementation using NumPy
     - Reference implementation using scikit-learn
     - Example dataset and training workflow
 
-- [Logistic Regression](logistic-regression)
+- [Logistic Regression](logistic_regression)
     - Custom implementation using NumPy
     - Reference implementation using scikit-learn
     - Binary classification example based on car purchase decisions

@@ -1,7 +1,7 @@
 # Logistic Regression
 
 These examples demonstrate logistic regression using the same used car scenario as
-for [linear regression](../linear-regression). The goal is to predict whether a customer will buy a car based on
+for [linear regression](../linear_regression). The goal is to predict whether a customer will buy a car based on
 multiple numerical features such as mileage, age, engine power, number of previous owners, and the price of the car.
 
 The algorithm is implemented in two ways:
