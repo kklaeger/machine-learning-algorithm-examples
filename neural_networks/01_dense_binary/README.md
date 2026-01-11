@@ -28,7 +28,7 @@ Compared to logistic regression, the additional hidden layers enable the model t
 ## Training Data
 
 The training data is identical to the dataset used in the logistic regression example. A preview of the synthetic
-dataset is shown below:
+dataset is shown below (generated via AI):
 
 | mileage_km | age_years | engine_power_hp | num_previous_owners | price_eur | will_buy |
 |-----------:|----------:|----------------:|--------------------:|----------:|---------:|

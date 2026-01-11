@@ -29,18 +29,36 @@ def load_training_data(file_path):
     return X, y
 
 
-# -------- Activation Functions --------
-def sigmoid(z):
+def one_hot(y, num_classes):
     """
-    Apply the sigmoid function.
+    Convert class labels to one-hot encoded vectors.
 
     Parameters:
-        z (np.ndarray | float): Input value(s).
+        y (np.ndarray): Array of class labels of shape (m,).
+        num_classes (int): Number of classes.
+    Returns:
+        y_one_hot (np.ndarray): One-hot encoded matrix of shape (m, num_classes).
+    """
+    y = y.astype(int).reshape(-1)
+    out = np.zeros((y.size, num_classes))
+    out[np.arange(y.size), y] = 1
+    return out
+
+
+# -------- Activation Functions --------
+def softmax(z):
+    """
+    Apply the softmax activation function.
+
+    Parameters:
+        z (np.ndarray): Input array of shape (m, n_classes).
 
     Returns:
-        sigmoid (np.ndarray | float): Sigmoid-transformed output in the range [0, 1].
+        softmax (np.ndarray): Softmax-transformed output of shape (m, n_classes).
     """
-    return 1 / (1 + np.exp(-z))
+    z = z - np.max(z, axis=1, keepdims=True)
+    exp_z = np.exp(z)
+    return exp_z / np.sum(exp_z, axis=1, keepdims=True)
 
 
 def relu(z):
@@ -71,21 +89,22 @@ def relu_backward(dA, z):
 
 
 # -------- Loss Functions --------
-def binary_cross_entropy(y_hat, y):
+def categorical_cross_entropy(y_hat, y):
     """
-    Compute the binary cross-entropy loss for individual predictions.
+    Compute the categorical cross-entropy loss.
 
     Parameters:
-        y_hat (np.ndarray): Predicted probabilities in the range (0, 1).
-        y (np.ndarray):     True target values (0 or 1).
+        y_hat (np.ndarray): Predicted probabilities of shape (m, n_classes).
+        y (np.ndarray):     True target values (one-hot encoded) of shape (m, n_classes).
+
     Returns:
-        loss (np.ndarray): Cross-entropy loss for each sample.
+        loss (float): Categorical cross-entropy loss.
     """
     # Avoid log(0) by clipping probabilities
     eps = 1e-15
     y_hat = np.clip(y_hat, eps, 1 - eps)
 
-    return -np.mean(y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
+    return -np.mean(np.sum(y * np.log(y_hat), axis=1))
 
 
 # -------- Layers --------
@@ -232,11 +251,12 @@ class DenseLayer:
 # -------- Model --------
 class Model:
     """
-    A simple sequential model for binary classification using dense layers.
+    A simple sequential model for multiclass classification using dense layers.
     """
 
-    def __init__(self):
+    def __init__(self, number_of_classes):
         self.layers = []
+        self.number_of_classes = number_of_classes
         self.learning_rate = None
 
     def add(self, layer):
@@ -289,15 +309,17 @@ class Model:
 
         for epoch in range(1, epochs + 1):
             # 1. Forward propagation through all layers
+            y_one_hot = one_hot(y, self.number_of_classes)
+
             logits = self.forward(X)
-            y_hat = sigmoid(logits)
+            y_hat = softmax(logits)
 
             # 2. Compute loss
-            loss = binary_cross_entropy(y_hat, y)
+            loss = categorical_cross_entropy(y_hat, y_one_hot)
 
             # 3. Backward propagation
-            # For sigmoid + BCE, the gradient w.r.t. logits simplifies to: dZ_last = y_hat - y
-            dZ_last = (y_hat - y)
+            # For sigmoid + BCE, the gradient w.r.t. logits simplifies to: dZ_last = y_hat - y_one_hot
+            dZ_last = (y_hat - y_one_hot)
 
             # 4. Backward propagation through all layers
             dA = dZ_last
@@ -319,10 +341,11 @@ class Model:
             X (np.ndarray): Input feature matrix of shape (m, n_features).
 
         Returns:
-            predictions (np.ndarray): Predicted probabilities of shape (m, 1).
+            predictions (np.ndarray): Predicted softmax probabilities of shape (m, n_classes).
         """
         logits = self.forward(X)
-        return sigmoid(logits)
+        predictions = softmax(logits)
+        return predictions
 
     def get_layer(self, name):
         """
@@ -349,11 +372,15 @@ def main():
     normalization_layer.adapt(X)
     X_scaled = normalization_layer(X)
 
+    # Define model input and output dimensions
+    number_of_features = X_scaled.shape[1]  # should be 4
+    number_of_classes = 3
+
     # Define the neural network model
-    model = Model()
-    model.add(DenseLayer(input_dim=X_scaled.shape[1], output_dim=16, activation="relu", name="layer1"))
+    model = Model(number_of_classes)
+    model.add(DenseLayer(input_dim=number_of_features, output_dim=16, activation="relu", name="layer1"))
     # The output layer uses linear activation to improve the stability; sigmoid is applied in the loss function
-    model.add(DenseLayer(input_dim=16, output_dim=1, activation="linear", name="layer2"))
+    model.add(DenseLayer(input_dim=16, output_dim=3, activation="linear", name="layer2"))
 
     # Define learning rate and number of iterations
     learning_rate = 0.05
@@ -369,22 +396,23 @@ def main():
     print("Layer 2 weights:\n", W2)
     print("Layer 2 bias:\n", b2)
 
-    # Test cars: same specifications, but different price
+    # Test cars for multiclass price category prediction
     test_cars = np.array([
-        [80000, 5, 120, 1, 10000],  # cheap (should buy)
-        [80000, 5, 120, 1, 50000],  # expensive (should not buy)
-        [129358, 12, 211, 1, 16817],  # average (should buy)
+        [210000, 14, 95, 3],  # very high mileage, old, weak engine -> cheap
+        [125000, 8, 180, 1],  # medium mileage, decent power -> average
+        [35000, 2, 360, 0],  # low mileage, young, powerful -> expensive
     ], dtype=float)
 
     # Scale test cars with the same normalization layer
     test_cars_scaled = normalization_layer(test_cars)
 
-    # Predict, if the user will buy each car
-    predictions = model.predict(test_cars_scaled)
-    decisions = (predictions >= 0.5).astype(int)
-    print(f"Cheap car       -> buy={decisions[0]}")  # 1 = yes
-    print(f"Expensive car   -> buy={decisions[1]}")  # 0 = no
-    print(f"Average car     -> buy={decisions[2]}")  # 1 = yes
+    # Predict, to which class each car belongs
+    probabilities = model.predict(test_cars_scaled)
+    predicted_classes = np.argmax(probabilities, axis=1)
+    labels = np.array(["cheap", "average", "expensive"])
+    print("Car 1 ->", labels[predicted_classes[0]])
+    print("Car 2 ->", labels[predicted_classes[1]])
+    print("Car 3 ->", labels[predicted_classes[2]])
 
 
 if __name__ == "__main__":
