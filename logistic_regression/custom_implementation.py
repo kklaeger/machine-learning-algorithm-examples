@@ -219,14 +219,16 @@ def main():
 
     # Two test cars: same specifications, but different price
     test_cars = np.array([
-        [80000, 5, 120, 1, 10000],  # cheap
-        [80000, 5, 120, 1, 50000],  # expensive
+        [80000, 5, 120, 1, 10000],  # cheap (should buy)
+        [80000, 5, 120, 1, 50000],  # expensive (should not buy)
+        [129358, 12, 211, 1, 16817],  # average (should buy)
     ], dtype=float)
 
     # Predict, if the user will buy each car
     predictions = predict_scaled(test_cars, w, b, mu, sigma)
     print(f"Cheap car       -> buy={predictions[0]}")  # 1 = yes
     print(f"Expensive car   -> buy={predictions[1]}")  # 0 = no
+    print(f"Average car     -> buy={predictions[2]}")  # 1 = yes
 
 
 if __name__ == "__main__":
