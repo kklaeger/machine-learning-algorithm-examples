@@ -20,3 +20,7 @@ Convolutional neural networks (CNNs) are used for more complex tasks, primarily 
 - [02_dense_multiclass](02_dense_multiclass)
     - Multiclass classification using a dense neural network.
     - Includes both a custom NumPy-based implementation and a TensorFlow implementation.
+
+- [03_cnn_binary](03_cnn_binary)
+    - Binary image classification using a convolutional neural network (CNN).
+    - Implemented using TensorFlow/Keras.

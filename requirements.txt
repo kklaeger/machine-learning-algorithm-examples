@@ -1,3 +1,6 @@
+keras-nightly
 numpy
 scikit-learn
 tensorflow
+tensorflow-datasets
+matplotlib

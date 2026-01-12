@@ -8,3 +8,12 @@ venv/
 
 # IntelliJ Idea
 .idea/
+
+# TensorFlow model files
+models/
+*.keras
+*.h5
+
+# Data files
+data/
+tfds_data/
