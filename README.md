@@ -22,6 +22,11 @@ The goal is to provide simple implementations that illustrate the core ideas beh
     - Convolutional neural networks (CNNs) for image classification using TensorFlow
     - Examples ordered by increasing complexity
 
+- [Decision Trees](decision_trees)
+    - Custom implementation of decision tree classifier
+    - Reference implementation using scikit-learn
+    - Example based on a medical diagnosis dataset
+
 Additional algorithms may be added over time following the same structure and design principles.
 
 ## Run

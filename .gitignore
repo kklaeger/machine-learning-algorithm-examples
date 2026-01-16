@@ -15,5 +15,4 @@ models/
 *.h5
 
 # Data files
-data/
 tfds_data/
