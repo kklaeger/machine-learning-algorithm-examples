@@ -5,53 +5,66 @@ demonstration purposes.
 
 The goal is to provide simple implementations that illustrate the core ideas behind common machine learning techniques.
 
+For some algorithms, a custom implementation is provided for learning purposes, alongside a reference implementation
+using established libraries such as scikit-learn or TensorFlow. The custom implementations are not optimized for
+production use. Their purpose is clarity and understanding, not performance.
+
 ## Algorithms
 
-- [Linear Regression](linear_regression)
-    - Custom implementation using NumPy
-    - Reference implementation using scikit-learn
-    - Linear regression example based on car purchase decisions
+### [Linear Regression](linear_regression)
 
-- [Logistic Regression](logistic_regression)
-    - Custom implementation using NumPy
-    - Reference implementation using scikit-learn
-    - Binary classification example based on car purchase decisions
+Linear regression is used to predict continuous numerical values.
 
-- [Neural Networks](neural_networks)
-    - Dense neural networks using a custom implementation (NumPy) and a reference implementation (TensorFlow)
-    - Convolutional neural networks (CNNs) for image classification using TensorFlow
-    - Examples ordered by increasing complexity
+In this repository, both a custom implementation and a scikit-learn reference implementation are provided.
 
-- [Decision Trees](decision_trees)
-    - Custom implementation of decision tree classifier
-    - Reference implementation using scikit-learn
-    - Example based on a medical diagnosis dataset
+**Example:** Predicting used car prices based on features like mileage, age, and brand.
+
+### [Logistic Regression](logistic_regression)
+
+Logistic regression is a binary classification algorithm used to predict probabilities.
+
+In this repository, both a custom implementation and a scikit-learn reference implementation are provided.
+
+**Example:** Predicting whether a customer will buy a used car based on features like price, mileage, age, and brand.
+
+### [Neural Networks](neural_networks)
+
+Neural networks are flexible models composed of multiple layers that can learn complex, non-linear relationships in
+data. This repository covers both dense and convolutional neural networks.
+
+#### Dense Neural Networks
+
+Dense neural networks consist of fully connected layers and are commonly used for learning non-linear patterns in
+tabular data.
+
+In this repository, two examples of dense networks are implemented in a custom way as well as using TensorFlow:
+
+- **Binary Classification Example:** Predicting whether a customer will buy a used car based on features like price,
+  mileage, age, and brand.
+- **Multiclass Classification Example:** Predicting the price category of a used car (e.g. cheap, average, expensive).
+
+#### Convolutional Neural Networks (CNNs)
+
+Convolutional neural networks are specialized neural networks designed for processing image data. They use convolutional
+layers to automatically learn spatial features such as edges and shapes.
+
+In this repository, two CNN examples are provided using TensorFlow:
+
+- **Binary Classification Example:** Classifying images of cats vs. dogs.
+- **Multiclass Classification Example:** TBD
+
+###  [Decision Trees](decision_trees)
+
+Decision trees are versatile models that can be used for both classification and regression tasks.
+
+**Example:** Predicting the diabetes risk level of patients based on health metrics like BMI, age, blood pressure, and glucose levels.
+
 
 Additional algorithms may be added over time following the same structure and design principles.
 
-## Run
+## How to Use
 
-### Requirements
+Python 3.x is required along with the libraries listed in the requirements.txt file.
 
-Python 3 and the following dependencies are required:
-
-- numpy
-- scikit-learn
-
-```bash
-python3 -m pip install -r requirements.txt
-```
-
-### Run an Example
-
-For example, to run the linear regression example:
-
-```bash
-python3 linear-regression/custom_implementation.py
-```
-
-To run the scikit-learn reference implementation:
-
-```bash
-python3 linear-regression/sklearn_implementation.py
-```
+Each algorithm has its own directory with implementation files and example scripts. To run an example, navigate to the 
+corresponding directory and execute the example script.

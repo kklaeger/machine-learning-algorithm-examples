@@ -8,16 +8,17 @@ The algorithm is implemented in two ways:
 - A [custom implementation](custom_implementation.py) using NumPy, focusing on entropy and information gain
 - A [reference implementation](sklearn_implementation.py) using `scikit-learn` for comparison
 
----
-
 ## Model
 
 The model is a simple recursive decision tree classifier that splits the data based on feature values to minimize
 entropy and maximize information gain.
 
-## Training Data
+## Training
 
-Below is a preview of the synthetic training dataset (generated via AI):
+The decision tree is trained by recursively splitting the dataset. At each node, the feature and threshold that maximize
+information gain are selected until a stopping criterion is met.
+
+Below is a preview of the synthetic training dataset stored as a CSV file:
 
 | age |  bmi | fasting_glucose | family_history | physical_activity_hours_per_week | high_diabetes_risk |
 |----:|-----:|----------------:|---------------:|---------------------------------:|-------------------:|
@@ -61,16 +62,21 @@ The scikit-learn implementation serves as a reference and comparison. It uses:
 
 The same dataset and feature set are used to allow a direct comparison with the custom implementation.
 
-## Run
+## How to Run
 
-To run the custom decision tree implementation, execute:
-
-```bash
-python3 custom_implementation.py
-```
-
-To run the scikit-learn decision tree implementation, execute:
-
-```bash
-python3 sklearn_implementation.py
-```
+1. Ensure you have Python installed (version 3.6 or higher recommended).
+    ```
+   python --version
+    ```
+2. Install the required libraries listed in the requirements.txt file:
+    ```bash
+    python -m pip install -r requirements.txt
+    ``` 
+3. Run the custom implementation:
+    ```bash
+    python custom_implementation.py
+    ```
+4. Run the scikit-learn implementation:
+    ```bash
+    python sklearn_implementation.py
+    ```

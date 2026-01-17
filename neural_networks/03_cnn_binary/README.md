@@ -1,7 +1,8 @@
 # Convolutional Neural Networks - Binary Classification
 
-This example demonstrates binary classification using a convolutional neural network (CNN). The goal is to predict 
-whether an input image contains a cat or a dog.
+This example demonstrates binary classification using a convolutional neural network (CNN). The goal is to predict
+whether an input image contains a cat or a dog. Unlike previous examples using tabular data, this model learns features
+directly from raw image pixels using convolutional layers.
 
 ## Dataset
 
@@ -46,7 +47,6 @@ The CNN consists of the following components:
 - A global average pooling layer to reduce spatial dimensions
 - A fully connected classifier head with dropout for regularization
 - A sigmoid output layer for binary classification
-- Binary cross-entropy loss and Adam optimizer
 
 High-level architecture:
 
@@ -64,9 +64,10 @@ Input (160, 160, 3)
 
 The output layer produces a single probability value indicating the likelihood of the image being a dog.
 
----
-
 ### Training (`train.py`)
+
+The model is trained using the Adam optimizer and binary cross-entropy loss, which are well-suited for binary image
+classification tasks.
 
 Training uses the following best practices:
 
@@ -90,30 +91,36 @@ Sample 1: True=cat, Pred=cat, Prob=0.23
 Sample 2: True=dog, Pred=cat, Prob=0.41
 ```
 
----
-
 ### Evaluation (`evaluate.py`)
 
 Evaluation is performed on the full test set and includes test loss and accuracy metrics, a confusion matrix, and
-precision & recall calculations.
+class-wise precision and recall scores.
 
-## Run
+## Notes
 
-To train the CNN model, run:
+The focus of this example is on understanding the CNN pipeline and architecture, not on achieving state-of-the-art
+accuracy.
 
-```bash
-python3 train.py
-```
+## How to Run
 
-To make predictions on random test samples, run:
-
-```bash
-
-python3 predict.py
-```
-
-To evaluate the trained model, run:
-
-```bash
-python3 evaluate.py
-```
+1. Ensure you have Python installed (version 3.6 or higher recommended).
+    ```
+   python --version
+    ```
+2. Install the required libraries listed in the requirements.txt file:
+    ```bash
+    python -m pip install -r requirements.txt
+    ``` 
+3. Train the CNN model by running:
+    ```bash
+    python train.py
+    ```
+4. After training, you can use the trained model for predictions by running:
+    ```bash
+    
+    python predict.py
+    ```
+5. Finally, evaluate the model's performance on the test set by running:
+    ```bash
+    python evaluate.py
+    ```

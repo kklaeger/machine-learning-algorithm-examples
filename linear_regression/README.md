@@ -22,9 +22,21 @@ where:
 - f(x) = ŷ is the predicted car price
 - y denotes the true target value used during training
 
-## Training Data
+## Cost Function
 
-Below is a preview of the synthetic training dataset (generated via AI):
+To measure how well the model predictions match the true target values, the Mean Squared Error (MSE) cost function is
+used.
+
+The training process aims to minimize the average squared difference between the predicted car prices and the true
+prices in the dataset.
+
+## Training
+
+The model parameters (weights and bias) are learned using Gradient Descent. During training, the gradients of the cost
+function with respect to the model parameters are computed and used to iteratively update the parameters in order to
+minimize the overall prediction error.
+
+Below is a preview of the synthetic training dataset stored as a CSV file:
 
 | mileage_km | age_years | engine_power_hp | num_previous_owners | price_eur |
 |-----------:|----------:|----------------:|--------------------:|----------:|
@@ -53,7 +65,26 @@ No machine learning libraries are used in this implementation.
 
 The scikit-learn implementation serves as a reference and comparison. It uses:
 
-- `SGDRegressor` for linear regression trained via gradient descent
-- `StandardScaler` for feature scaling
+- `SGDRegressor` for linear regression trained via stochastic gradient descent using the squared error loss
+- `StandardScaler` for feature normalization
 
 The same training data and feature set are used to allow a direct comparison with the custom implementation.
+
+## How to Run
+
+1. Ensure you have Python installed (version 3.6 or higher recommended).
+    ```
+   python --version
+    ```
+2. Install the required libraries listed in the requirements.txt file:
+    ```bash
+    python -m pip install -r requirements.txt
+    ``` 
+3. Run the custom implementation:
+    ```bash
+    python custom_implementation.py
+    ```
+4. Run the scikit-learn implementation:
+    ```bash
+    python sklearn_implementation.py
+    ```

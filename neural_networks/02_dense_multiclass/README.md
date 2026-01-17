@@ -11,21 +11,28 @@ The neural network is implemented in two ways:
 
 ## Architecture
 
-The dense neural network used in this example consists of:
+The dense neural network used in this example has the following structure:
 
-- An input layer corresponding to the numerical feature vector
-- One hidden dense layer with non-linear ReLU activation function
-- An output layer with linear activation and three output units (one per class)
-- Softmax applied outside the model to obtain class probabilities
-- Categorical cross-entropy as the loss function
-- Gradient-based optimization
+- Input layer corresponding to the numerical feature vector
+- One hidden dense layer with ReLU activation
+- Output layer with three units (one per class)
 
----
+## Output and Activation
 
-## Training Data
+The output layer produces raw class scores (logits). A softmax function is applied to convert these scores into class
+probabilities.
 
-The training data is identical to the dataset used in the logistic regression example, except that the target is now a
-multiclass label.
+## Loss Function
+
+Categorical cross-entropy is used as the loss function, which is well-suited for multiclass classification problems.
+
+## Training
+
+The network is trained using gradient-based optimization. Gradients are computed via backpropagation and used to update
+the model parameters.
+
+The training data is identical to the dataset used in the logistic regression example, with the target transformed into
+a multiclass label.
 
 The dataset contains the following columns:
 
@@ -35,7 +42,7 @@ The dataset contains the following columns:
 - `num_previous_owners`
 - `price_category` (integer labels: `0 = cheap`, `1 = average`, `2 = expensive`)
 
-Below is a preview of the synthetic training dataset (generated via AI):
+Below is a preview of the synthetic training dataset stored as a CSV file:
 
 | mileage_km | age_years | engine_power_hp | num_previous_owners | price_category |
 |-----------:|----------:|----------------:|--------------------:|---------------:|
@@ -45,8 +52,6 @@ Below is a preview of the synthetic training dataset (generated via AI):
 |     108694 |        13 |             172 |                   2 |              0 |
 |     124879 |         7 |             160 |                   2 |              1 |
 |        ... |           |                 |                     |                |
-
----
 
 ## Implementations
 
@@ -64,3 +69,22 @@ framework.
 
 - Feature scaling is applied to ensure stable and efficient training of the neural network.
 - The custom implementation avoids unnecessary abstractions to keep the training process transparent.
+
+## How to Run
+
+1. Ensure you have Python installed (version 3.6 or higher recommended).
+    ```
+   python --version
+    ```
+2. Install the required libraries listed in the requirements.txt file:
+    ```bash
+    python -m pip install -r requirements.txt
+    ``` 
+3. Run the custom implementation:
+    ```bash
+    python custom_implementation.py
+    ```
+4. Run the TensorFlow implementation:
+    ```bash
+    python tensorflow_implementation.py
+    ```

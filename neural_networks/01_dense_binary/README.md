@@ -13,22 +13,25 @@ The neural network is implemented in two ways:
 
 ## Architecture
 
-The dense neural network used in this example consists of:
+The dense neural network used in this example has the following structure:
 
-- An input layer corresponding to the numerical feature vector
-- One hidden dense layer with non-linear ReLU activation function
-- An output layer with a sigmoid activation function
-- Binary cross-entropy as the loss function
-- Gradient-based optimization
+- Input layer corresponding to the numerical feature vector
+- One hidden dense layer with ReLU activation
+- Output layer with a sigmoid activation function
 
-Compared to logistic regression, the additional hidden layers enable the model to learn non-linear decision boundaries.
+Compared to logistic regression, the additional hidden layer enables the model to learn non-linear decision boundaries.
 
----
+## Loss Function
 
-## Training Data
+Binary cross-entropy is used as the loss function, which is well-suited for binary classification problems.
+
+## Training
+
+The network is trained using gradient-based optimization. Gradients are computed via backpropagation and used to update
+the model parameters.
 
 The training data is identical to the dataset used in the logistic regression example. A preview of the synthetic
-dataset is shown below (generated via AI):
+dataset is shown below:
 
 | mileage_km | age_years | engine_power_hp | num_previous_owners | price_eur | will_buy |
 |-----------:|----------:|----------------:|--------------------:|----------:|---------:|
@@ -38,8 +41,6 @@ dataset is shown below (generated via AI):
 |     108694 |        13 |             172 |                   2 |     15970 |        1 |
 |     124879 |         7 |             160 |                   2 |     16516 |        1 |
 |        ... |           |                 |                     |           |          |
-
----
 
 ## Implementations
 
@@ -57,3 +58,22 @@ framework.
 
 - Feature scaling is applied to ensure stable and efficient training of the neural network.
 - The custom implementation avoids unnecessary abstractions to keep the training process transparent.
+
+## How to Run
+
+1. Ensure you have Python installed (version 3.6 or higher recommended).
+    ```
+   python --version
+    ```
+2. Install the required libraries listed in the requirements.txt file:
+    ```bash
+    python -m pip install -r requirements.txt
+    ``` 
+3. Run the custom implementation:
+    ```bash
+    python custom_implementation.py
+    ```
+4. Run the TensorFlow implementation:
+    ```bash
+    python tensorflow_implementation.py
+    ```

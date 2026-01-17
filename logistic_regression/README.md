@@ -28,9 +28,20 @@ and:
 - σ(z) is the [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function)
 - y denotes the true target value used during training
 
-## Training Data
+## Loss Function
 
-Below is a preview of the synthetic training dataset (generated via AI):
+To measure how well the predicted probabilities match the true binary labels, the binary cross-entropy (log loss) is
+used.
+
+This loss function penalizes confident but incorrect predictions and is well-suited for binary classification problems.
+
+## Training
+
+The model parameters (weights and bias) are learned using Gradient Descent. During training, the gradients of the loss
+function with respect to the model parameters are computed and used to iteratively minimize the binary cross-entropy
+loss.
+
+Below is a preview of the synthetic training dataset stored as a CSV file:
 
 | mileage_km | age_years | engine_power_hp | num_previous_owners | price_eur | will_buy |
 |-----------:|----------:|----------------:|--------------------:|----------:|---------:|
@@ -47,7 +58,7 @@ Below is a preview of the synthetic training dataset (generated via AI):
 
 The custom implementation focuses on clarity and understanding of the algorithm. It includes:
 
-- Explicit computation of the logistic (cross-entropy) loss function
+- Explicit computation of the binary cross-entropy (logistic) loss function
 - Gradient descent for computing the gradients
 - Feature normalization to ensure that all input features have a comparable scale, which improves the stability and
   convergence of gradient descent
@@ -59,7 +70,27 @@ No machine learning libraries are used in this implementation.
 
 The scikit-learn implementation serves as a reference and comparison. It uses:
 
-- `LogisticRegression` for logistic regression
-- `StandardScaler` for feature scaling
+- `SGDClassifier` for logistic regression trained via stochastic gradient descent using the log loss (binary
+  cross-entropy)
+- `StandardScaler` for feature normalization
 
 The same training data and feature set are used to allow a direct comparison with the custom implementation.
+
+## How to Run
+
+1. Ensure you have Python installed (version 3.6 or higher recommended).
+    ```
+   python --version
+    ```
+2. Install the required libraries listed in the requirements.txt file:
+    ```bash
+    python -m pip install -r requirements.txt
+    ``` 
+3. Run the custom implementation:
+    ```bash
+    python custom_implementation.py
+    ```
+4. Run the scikit-learn implementation:
+    ```bash
+    python sklearn_implementation.py
+    ```
