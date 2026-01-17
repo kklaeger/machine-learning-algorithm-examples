@@ -4,11 +4,13 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
-np.set_printoptions(precision=2, suppress=True)
+SEED = 42
 
 # Ensure reproducible results
-np.random.seed(1234)
-tf.random.set_seed(1234)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
+
+np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"

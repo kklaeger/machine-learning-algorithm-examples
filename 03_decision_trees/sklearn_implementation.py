@@ -2,6 +2,11 @@ import numpy as np
 from pathlib import Path
 from sklearn.tree import DecisionTreeClassifier, export_text
 
+SEED = 42
+
+# Ensure reproducible results
+np.random.seed(SEED)
+
 np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -35,7 +40,7 @@ def main():
         criterion="entropy",
         max_depth=7,
         min_samples_split=10,
-        random_state=42
+        random_state=SEED
     )
 
     # Train model

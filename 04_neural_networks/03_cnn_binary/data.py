@@ -5,6 +5,7 @@ IMAGE_SIZE = (160, 160)  # (height, width)
 SHUFFLE_BUFFER_SIZE = 1000
 PIXEL_SCALE = 255.0
 AUTOTUNE = tf.data.AUTOTUNE
+SEED = 42
 
 
 def load_raw_data(data_dir="./tfds_data"):
@@ -67,7 +68,7 @@ def prepare_dataset(data_set, batch_size=32, shuffle=False, do_batch=True):
     data_set = data_set.map(preprocess_image, num_parallel_calls=AUTOTUNE)
 
     if shuffle:
-        data_set = data_set.shuffle(SHUFFLE_BUFFER_SIZE)
+        data_set = data_set.shuffle(SHUFFLE_BUFFER_SIZE,  seed=SEED)
 
     if do_batch:
         data_set = data_set.batch(batch_size)

@@ -3,6 +3,11 @@ from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 
+SEED = 42
+
+# Ensure reproducible results
+np.random.seed(SEED)
+
 np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -39,7 +44,10 @@ def main():
     iterations = 10000
 
     # Logistic Regression
-    model = LogisticRegression(max_iter=iterations)
+    model = LogisticRegression(
+        max_iter=iterations,
+        random_state=SEED
+    )
 
     # Train model
     model.fit(X_scaled, y)
@@ -49,18 +57,20 @@ def main():
     print("Learned weights: w =", w)  # w = [[-2.06 -0.39 -2.19  0.47 -1.56]]
     print(f"Learned bias: b = {b:.2f}")  # b = 0.18
 
-    # Two test cars: same specifications, but different price
+    # Test cars: same specifications, but different price
     test_cars = np.array([
-        [80000, 5, 120, 1, 10000],  # cheap
-        [80000, 5, 120, 1, 50000],  # expensive
+        [80000, 5, 120, 1, 10000],  # cheap (should buy)
+        [80000, 5, 120, 1, 50000],  # expensive (should not buy)
+        [129358, 12, 211, 1, 16817],  # average (should buy)
     ], dtype=float)
 
     test_cars_scaled = scaler.transform(test_cars)
 
     # Predict, if the user will buy each car
     predictions = model.predict(test_cars_scaled)
-    print(f"Cheap car       -> buy={predictions[0]}")  # 1 = yes
-    print(f"Expensive car   -> buy={predictions[1]}")  # 0 = no
+    print(f"Cheap car       -> buy={int(predictions[0])}")  # 1 = yes
+    print(f"Expensive car   -> buy={int(predictions[1])}")  # 0 = no
+    print(f"Average car     -> buy={int(predictions[2])}")  # 1 = yes
 
 
 if __name__ == "__main__":

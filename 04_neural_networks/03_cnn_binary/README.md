@@ -96,6 +96,23 @@ Sample 2: True=dog, Pred=cat, Prob=0.41
 Evaluation is performed on the full test set and includes test loss and accuracy metrics, a confusion matrix, and
 class-wise precision and recall scores.
 
+## Reproducibility
+
+To ensure reproducible results across runs and between different implementations, a fixed random seed is used throughout
+this example.
+
+- NumPy random number generation is seeded
+- TensorFlow uses a fixed random seed for weight initialization, data shuffling, and training behavior
+- The same seed is applied for data shuffling and parameter initialization where applicable
+
+The default seed used in this project is:
+
+```
+SEED = 42
+```
+
+Changing the seed may lead to slightly different learned parameters and evaluation results.
+
 ## Notes
 
 The focus of this example is on understanding the CNN pipeline and architecture, not on achieving state-of-the-art

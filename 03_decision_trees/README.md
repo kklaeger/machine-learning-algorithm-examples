@@ -39,6 +39,23 @@ Target variable:
 
 - `high_diabetes_risk` – binary label (0 = low risk, 1 = high risk)
 
+## Reproducibility
+
+To ensure reproducible results across runs and between different implementations, a fixed random seed is used throughout
+this example.
+
+- NumPy random number generation is seeded
+- scikit-learn components use a fixed `random_state`
+- The same seed is applied for data shuffling and parameter initialization where applicable
+
+The default seed used in this project is:
+
+```
+SEED = 42
+```
+
+Changing the seed may lead to slightly different learned parameters and evaluation results.
+
 ## Implementation
 
 ### Custom Implementation

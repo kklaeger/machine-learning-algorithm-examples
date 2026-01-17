@@ -2,6 +2,11 @@ import numpy as np
 from pathlib import Path
 import copy
 
+SEED = 42
+
+# Ensure reproducible results
+np.random.seed(SEED)
+
 np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -217,7 +222,7 @@ def main():
     print("Learned weights: w =", w)  # w = [-2.74 -0.45 -3.19  0.7  -1.96]
     print(f"Learned bias: b = {b:.2f}")  # b = 0.18
 
-    # Two test cars: same specifications, but different price
+    # Test cars: same specifications, but different price
     test_cars = np.array([
         [80000, 5, 120, 1, 10000],  # cheap (should buy)
         [80000, 5, 120, 1, 50000],  # expensive (should not buy)

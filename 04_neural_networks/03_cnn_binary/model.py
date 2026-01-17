@@ -1,6 +1,7 @@
 import tensorflow as tf
 
 LEARNING_RATE = 2e-4
+SEED = 42
 
 
 def build_model(input_shape=(160, 160, 3)):
@@ -14,9 +15,9 @@ def build_model(input_shape=(160, 160, 3)):
         - model (tf.keras.Model): Compiled CNN model.
     """
     data_augmentation = tf.keras.models.Sequential([
-        tf.keras.layers.RandomFlip("horizontal"),
-        tf.keras.layers.RandomRotation(0.05),
-        tf.keras.layers.RandomZoom(0.1),
+        tf.keras.layers.RandomFlip(mode="horizontal", seed=SEED),
+        tf.keras.layers.RandomRotation(facotr=0.05, seed=SEED),
+        tf.keras.layers.RandomZoom(height_factor=0.1, seed=SEED),
     ], name="data_augmentation")
 
     model = tf.keras.models.Sequential([

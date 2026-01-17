@@ -1,10 +1,12 @@
 import numpy as np
 from pathlib import Path
 
-np.set_printoptions(precision=2, suppress=True)
+SEED = 42
 
 # Ensure reproducible results
-np.random.seed(1234)
+np.random.seed(SEED)
+
+np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"

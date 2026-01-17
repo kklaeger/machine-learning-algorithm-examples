@@ -53,6 +53,22 @@ Below is a preview of the synthetic training dataset stored as a CSV file:
 |     124879 |         7 |             160 |                   2 |              1 |
 |        ... |           |                 |                     |                |
 
+## Reproducibility
+
+To ensure reproducible results across runs and between different implementations, a fixed random seed is used throughout
+this example.
+
+- NumPy random number generation is seeded
+- TensorFlow uses a fixed random seed for weight initialization, data shuffling, and training behavior
+- The same seed is applied for data shuffling and parameter initialization where applicable
+
+The default seed used in this project is:
+```
+SEED = 42
+```
+
+Changing the seed may lead to slightly different learned parameters and evaluation results.
+
 ## Implementations
 
 ### Custom Implementation

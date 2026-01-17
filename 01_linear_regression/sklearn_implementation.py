@@ -3,6 +3,11 @@ from pathlib import Path
 from sklearn.linear_model import SGDRegressor
 from sklearn.preprocessing import StandardScaler
 
+SEED = 42
+
+# Ensure reproducible results
+np.random.seed(SEED)
+
 np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -39,7 +44,10 @@ def main():
     iterations = 1000
 
     # Linear regression trained via gradient descent
-    model = SGDRegressor(max_iter=iterations)
+    model = SGDRegressor(
+        max_iter=iterations,
+        random_state=SEED
+    )
 
     # Train model using gradient descent
     model.fit(X_scaled, y)

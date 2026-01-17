@@ -53,18 +53,23 @@ In this repository, two CNN examples are provided using TensorFlow:
 - **Binary Classification Example:** Classifying images of cats vs. dogs.
 - **Multiclass Classification Example:** TBD
 
-###  [Decision Trees](03_decision_trees)
+### [Decision Trees](03_decision_trees)
 
 Decision trees are versatile models that can be used for both classification and regression tasks.
 
-**Example:** Predicting the diabetes risk level of patients based on health metrics like BMI, age, blood pressure, and glucose levels.
-
+**Example:** Predicting the diabetes risk level of patients based on health metrics like BMI, age, blood pressure, and
+glucose levels.
 
 Additional algorithms may be added over time following the same structure and design principles.
+
+## Notes
+
+All examples in this repository use a fixed random seed (default: 42) to ensure reproducible results across runs and
+implementations.
 
 ## How to Use
 
 Python 3.x is required along with the libraries listed in the requirements.txt file.
 
-Each algorithm has its own directory with implementation files and example scripts. To run an example, navigate to the 
+Each algorithm has its own directory with implementation files and example scripts. To run an example, navigate to the
 corresponding directory and execute the example script.

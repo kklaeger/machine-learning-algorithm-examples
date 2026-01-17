@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from data import load_raw_data, prepare_dataset
 
 MODEL_PATH = "models/model.keras"
-
+SEED = 42
 
 def get_random_examples(dataset, number_of_examples):
     """
@@ -17,8 +17,7 @@ def get_random_examples(dataset, number_of_examples):
         - images (tf.Tensor): A batch of randomly selected images.
         - labels (tf.Tensor): Corresponding labels for the selected images.
     """
-    seed = int(tf.timestamp().numpy() * 1e6) % (2 ** 31 - 1)
-    dataset = dataset.shuffle(1000, seed=seed, reshuffle_each_iteration=True).take(number_of_examples)
+    dataset = dataset.shuffle(1000, seed=SEED, reshuffle_each_iteration=True).take(number_of_examples)
 
     images, labels = [], []
     for image, label in dataset:
@@ -91,7 +90,6 @@ def visualize_predictions(images, labels, probabilities, class_names, threshold=
 def main():
     # Load the raw dataset
     _, _, test_data_raw, data_info = load_raw_data()
-    class_names = data_info.features["label"].names
 
     # Prepare test dataset
     test_data = prepare_dataset(test_data_raw, shuffle=False, do_batch=False)

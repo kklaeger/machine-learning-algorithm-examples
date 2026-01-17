@@ -6,11 +6,13 @@ from data import load_raw_data, prepare_dataset
 from model import build_model
 
 # Ensure reproducible results
-np.random.seed(1234)
-tf.random.set_seed(1234)
+SEED = 42
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
 
 MAX_EPOCHS = 50
 MODEL_PATH = "models/model.keras"
+
 
 def train_model(model, training_data, validation_data, epochs, best_model_path):
     """
