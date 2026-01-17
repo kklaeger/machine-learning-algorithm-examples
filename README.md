@@ -27,6 +27,13 @@ In this repository, both a custom implementation and a scikit-learn reference im
 
 **Example:** Predicting whether a customer will buy a used car based on features like price, mileage, age, and brand.
 
+### [Decision Trees](03_decision_trees)
+
+Decision trees are versatile models that can be used for both classification and regression tasks.
+
+**Example:** Predicting the diabetes risk level of patients based on health metrics like BMI, age, blood pressure, and
+glucose levels.
+
 ### [Neural Networks](04_neural_networks)
 
 Neural networks are flexible models composed of multiple layers that can learn complex, non-linear relationships in
@@ -52,13 +59,6 @@ In this repository, two CNN examples are provided using TensorFlow:
 
 - **Binary Classification Example:** Classifying images of cats vs. dogs.
 - **Multiclass Classification Example:** TBD
-
-### [Decision Trees](03_decision_trees)
-
-Decision trees are versatile models that can be used for both classification and regression tasks.
-
-**Example:** Predicting the diabetes risk level of patients based on health metrics like BMI, age, blood pressure, and
-glucose levels.
 
 Additional algorithms may be added over time following the same structure and design principles.
 
