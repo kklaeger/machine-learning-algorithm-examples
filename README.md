@@ -11,7 +11,7 @@ production use. Their purpose is clarity and understanding, not performance.
 
 ## Algorithms
 
-### [Linear Regression](linear_regression)
+### [Linear Regression](01_linear_regression)
 
 Linear regression is used to predict continuous numerical values.
 
@@ -19,7 +19,7 @@ In this repository, both a custom implementation and a scikit-learn reference im
 
 **Example:** Predicting used car prices based on features like mileage, age, and brand.
 
-### [Logistic Regression](logistic_regression)
+### [Logistic Regression](02_logistic_regression)
 
 Logistic regression is a binary classification algorithm used to predict probabilities.
 
@@ -27,7 +27,7 @@ In this repository, both a custom implementation and a scikit-learn reference im
 
 **Example:** Predicting whether a customer will buy a used car based on features like price, mileage, age, and brand.
 
-### [Neural Networks](neural_networks)
+### [Neural Networks](04_neural_networks)
 
 Neural networks are flexible models composed of multiple layers that can learn complex, non-linear relationships in
 data. This repository covers both dense and convolutional neural networks.
@@ -53,7 +53,7 @@ In this repository, two CNN examples are provided using TensorFlow:
 - **Binary Classification Example:** Classifying images of cats vs. dogs.
 - **Multiclass Classification Example:** TBD
 
-###  [Decision Trees](decision_trees)
+###  [Decision Trees](03_decision_trees)
 
 Decision trees are versatile models that can be used for both classification and regression tasks.
 

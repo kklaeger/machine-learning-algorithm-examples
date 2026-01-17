@@ -1,7 +1,7 @@
 # Dense Neural Network – Binary Classification
 
 This example demonstrates binary classification using a dense (fully connected) neural network. It is based on the same
-used car purchase scenario as the [logistic regression example](../../logistic_regression). The goal is to predict
+used car purchase scenario as the [logistic regression example](../../02_logistic_regression). The goal is to predict
 whether a customer will buy a car based on multiple numerical features such as mileage, age, engine power, number of
 previous owners, and the price of the car.
 
