@@ -1,6 +1,9 @@
 import numpy as np
-from pathlib import Path
 import copy
+from pathlib import Path
+
+from utils.data_utils import load_data, split_data
+from utils.metrics import compute_mse_rmse
 
 SEED = 42
 
@@ -11,24 +14,6 @@ np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"
-
-
-def load_training_data(file_path):
-    """
-    Loads training data from a CSV file and split it into features and target values.
-
-    Parameters:
-        file_path (str | Path): Path to the CSV training data file.
-
-    Returns:
-        X (np.ndarray): Feature matrix.
-        y (np.ndarray): True target values.
-    """
-    data = np.loadtxt(fname=file_path, delimiter=',', skiprows=1, dtype=float)
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    return X, y
 
 
 def model_output(X, w, b):
@@ -169,13 +154,22 @@ def predict_scaled(X, w, b, mu, sigma):
 
 def main():
     # Load the training data from the CSV file
-    X, y = load_training_data(TRAINING_DATA_PATH)
+    X, y = load_data(TRAINING_DATA_PATH)
+
+    # Split the data into training and testing sets
+    X_train, y_train, X_test, y_test = split_data(
+        X,
+        y,
+        test_ratio=0.2,
+        seed=SEED,
+        shuffle=True
+    )
 
     # Scale features to improve the stability and convergence of gradient descent
-    X_scaled, mu, sigma = scale_features(X)
+    X_train_scaled, mu, sigma = scale_features(X_train)
 
     # Initialize the model parameters
-    w_init = np.zeros(X.shape[1])
+    w_init = np.zeros(X_train.shape[1])
     b_init = 0.0
 
     # Define learning rate and number oif iterations
@@ -183,14 +177,22 @@ def main():
     iterations = 10000
 
     # Train model using gradient descent
-    w, b = gradient_descent(X_scaled, y, w_init, b_init, alpha, iterations)
-    print("Learned weights: w =", w)  # w = [-2977.26 -3740.68  3785.22  -992.96]
-    print(f"Learned bias: b = {b:.2f}")  # b = 19685.27
+    w, b = gradient_descent(X_train_scaled, y_train, w_init, b_init, alpha, iterations)
+    print("\nLearned parameters:")
+    print("Weights: w =", w)  # w = [-2977.26 -3740.68  3785.22  -992.96]
+    print(f"Bias: b = {b:.2f}")  # b = 19685.27
+
+    # Evaluate the model on the test set (MSE / RMSE)
+    y_test_pred = predict_scaled(X_test, w, b, mu, sigma)
+    test_mse, test_rmse = compute_mse_rmse(y_test, y_test_pred)
+    print("\nEvaluation on the test set:")
+    print(f"MSE:  {test_mse:.2f}")  # 1435317.24
+    print(f"RMSE: {test_rmse:.2f}")  # 1198.05
 
     # Predict the price of a test car
     test_car = np.array([80000, 5, 120, 1])
     predicted_price = predict_scaled(test_car, w, b, mu, sigma)
-
+    print("\nPredicting price for test car with features:")
     print(f"Predicted price: {predicted_price:.2f}")  # 20032.71
 
 

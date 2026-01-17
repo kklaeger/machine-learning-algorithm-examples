@@ -3,6 +3,9 @@ from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 
+from utils.data_utils import load_data, split_data
+from utils.metrics import compute_cross_entropy_loss, compute_accuracy
+
 SEED = 42
 
 # Ensure reproducible results
@@ -14,31 +17,22 @@ BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"
 
 
-def load_training_data(file_path):
-    """
-    Loads training data from a CSV file and split it into features and target values.
-
-    Parameters:
-        file_path (str | Path): Path to the CSV training data file.
-
-    Returns:
-        X (np.ndarray): Feature matrix.
-        y (np.ndarray): True target values.
-    """
-    data = np.loadtxt(fname=file_path, delimiter=',', skiprows=1, dtype=float)
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    return X, y
-
-
 def main():
     # Load the training data from the CSV file
-    X, y = load_training_data(TRAINING_DATA_PATH)
+    X, y = load_data(TRAINING_DATA_PATH)
+
+    # Split the data into training and testing sets
+    X_train, y_train, X_test, y_test = split_data(
+        X,
+        y,
+        test_ratio=0.2,
+        seed=SEED,
+        shuffle=True
+    )
 
     # Feature scaling (same idea as in the custom implementation)
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    X_train_scaled = scaler.fit_transform(X_train)
 
     # Define number oif iterations
     iterations = 10000
@@ -50,12 +44,23 @@ def main():
     )
 
     # Train model
-    model.fit(X_scaled, y)
+    model.fit(X_train_scaled, y_train)
 
     w = model.coef_
     b = model.intercept_[0]
-    print("Learned weights: w =", w)  # w = [[-2.06 -0.39 -2.19  0.47 -1.56]]
-    print(f"Learned bias: b = {b:.2f}")  # b = 0.18
+    print("Learned parameters:")
+    print("Weights: w =", w)  # w = [[-2.06 -0.39 -2.19  0.47 -1.56]]
+    print(f"Bias: b = {b:.2f}")  # b = 0.18
+
+    # Evaluate the model on the test set (Log Loss / Accuracy)
+    X_test_scaled = scaler.transform(X_test)
+    y_test_pred = model.predict_proba(X_test_scaled)[:, 1]
+    log_loss = compute_cross_entropy_loss(y_test, y_test_pred)
+    accuracy = compute_accuracy(y_test, y_test_pred)
+
+    print("\nEvaluation on the test set:")
+    print(f"Log Loss: {log_loss:.4f}")  # 0.1367
+    print(f"Accuracy: {accuracy:.3f}")  # 1.000
 
     # Test cars: same specifications, but different price
     test_cars = np.array([
@@ -68,6 +73,7 @@ def main():
 
     # Predict, if the user will buy each car
     predictions = model.predict(test_cars_scaled)
+    print("\nPredictions for test cars:")
     print(f"Cheap car       -> buy={int(predictions[0])}")  # 1 = yes
     print(f"Expensive car   -> buy={int(predictions[1])}")  # 0 = no
     print(f"Average car     -> buy={int(predictions[2])}")  # 1 = yes

@@ -1,8 +1,11 @@
 import numpy as np
-from pathlib import Path
 import tensorflow as tf
+from pathlib import Path
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+
+from utils.data_utils import load_data, split_data
+from utils.metrics import compute_accuracy
 
 SEED = 42
 
@@ -16,35 +19,26 @@ BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"
 
 
-def load_training_data(file_path):
-    """
-    Loads training data from a CSV file and split it into features and target values.
-
-    Parameters:
-        file_path (str | Path): Path to the CSV training data file.
-
-    Returns:
-        X (np.ndarray): Feature matrix.
-        y (np.ndarray): True target values.
-    """
-    data = np.loadtxt(fname=file_path, delimiter=',', skiprows=1, dtype=float)
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    return X, y
-
-
 def main():
     # Load the training data from the CSV file
-    X, y = load_training_data(TRAINING_DATA_PATH)
+    X, y = load_data(TRAINING_DATA_PATH)
+
+    # Split the data into training and testing sets
+    X_train, y_train, X_test, y_test = split_data(
+        X,
+        y,
+        test_ratio=0.2,
+        seed=SEED,
+        shuffle=True
+    )
 
     # Feature scaling (same idea as in the custom implementation)
     normalization_layer = tf.keras.layers.Normalization(axis=-1)
-    normalization_layer.adapt(X)
-    X_scaled = normalization_layer(X)
+    normalization_layer.adapt(X_train)
+    X_train_scaled = normalization_layer(X_train)
 
     # Define model input and output dimensions
-    number_of_features = X_scaled.shape[1]  # should be 4
+    number_of_features = X_train_scaled.shape[1]  # should be 4
     number_of_classes = 3
 
     # Define the neural network model
@@ -69,14 +63,25 @@ def main():
     )
 
     # Train model and update weights
-    model.fit(X_scaled, y, epochs=epochs)
+    model.fit(X_train_scaled, y_train, epochs=epochs)
 
     W1, b1 = model.get_layer("layer1").get_weights()
     W2, b2 = model.get_layer("layer2").get_weights()
+
+    print("\nLearned parameters:")
     print("Layer 1 weights:\n", W1)
     print("Layer 1 bias:\n", b1)
     print("Layer 2 weights:\n", W2)
     print("Layer 2 bias:\n", b2)
+
+    # Evaluate the model on the test set
+    X_test_scaled = normalization_layer(X_test)
+    logits = model.predict(X_test_scaled)
+    y_test_prob = tf.nn.softmax(logits, axis=1).numpy()
+    accuracy = compute_accuracy(y_test, y_test_prob)
+
+    print("\nEvaluation on the test set:")
+    print(f"Accuracy: {accuracy:.3f}")  # e.g. 0.850
 
     # Test cars for multiclass price category prediction
     test_cars = np.array([
@@ -89,12 +94,14 @@ def main():
     test_cars_scaled = normalization_layer(test_cars)
 
     # Predict, to which class each car belongs
-    probabilities = model.predict(test_cars_scaled)
-    predicted_classes = np.argmax(probabilities, axis=1)
+    logits = model.predict(test_cars_scaled)
+    predicted_classes = np.argmax(logits, axis=1)
     labels = np.array(["cheap", "average", "expensive"])
-    print("Car 1 ->", labels[predicted_classes[0]])
-    print("Car 2 ->", labels[predicted_classes[1]])
-    print("Car 3 ->", labels[predicted_classes[2]])
+
+    print("\nPredictions for test cars:")
+    print("Car 1 ->", labels[predicted_classes[0]])  # cheap
+    print("Car 2 ->", labels[predicted_classes[1]])  # average
+    print("Car 3 ->", labels[predicted_classes[2]])  # expensive
 
 
 if __name__ == "__main__":

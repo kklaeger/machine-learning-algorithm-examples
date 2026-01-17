@@ -1,6 +1,9 @@
 import numpy as np
 from pathlib import Path
 
+from utils.data_utils import load_data, split_data
+from utils.metrics import compute_accuracy
+
 SEED = 42
 
 # Ensure reproducible results
@@ -10,25 +13,6 @@ np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"
-
-
-# -------- Helpers Functions --------
-def load_training_data(file_path):
-    """
-    Loads training data from a CSV file and split it into features and target values.
-
-    Parameters:
-        file_path (str | Path): Path to the CSV training data file.
-
-    Returns:
-        X (np.ndarray): Feature matrix.
-        y (np.ndarray): True target values.
-    """
-    data = np.loadtxt(fname=file_path, delimiter=',', skiprows=1, dtype=float)
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    return X, y
 
 
 # -------- Activation Functions --------
@@ -344,16 +328,25 @@ class Model:
 
 def main():
     # Load the training data from the CSV file
-    X, y = load_training_data(TRAINING_DATA_PATH)
+    X, y = load_data(TRAINING_DATA_PATH)
+
+    # Split the data into training and testing sets
+    X_train, y_train, X_test, y_test = split_data(
+        X,
+        y,
+        test_ratio=0.2,
+        seed=SEED,
+        shuffle=True
+    )
 
     # Scale features to improve the stability and convergence of gradient descent
     normalization_layer = NormalizationLayer()
-    normalization_layer.adapt(X)
-    X_scaled = normalization_layer(X)
+    normalization_layer.adapt(X_train)
+    X_train_scaled = normalization_layer(X_train)
 
     # Define the neural network model
     model = Model()
-    model.add(DenseLayer(input_dim=X_scaled.shape[1], output_dim=16, activation="relu", name="layer1"))
+    model.add(DenseLayer(input_dim=X_train_scaled.shape[1], output_dim=16, activation="relu", name="layer1"))
     # The output layer uses linear activation to improve the stability; sigmoid is applied in the loss function
     model.add(DenseLayer(input_dim=16, output_dim=1, activation="linear", name="layer2"))
 
@@ -362,14 +355,24 @@ def main():
     epochs = 1000
 
     model.compile(learning_rate=learning_rate)
-    model.fit(X_scaled, y, epochs=epochs)
+    model.fit(X_train_scaled, y_train, epochs=epochs)
 
     W1, b1 = model.get_layer("layer1").get_weights()
     W2, b2 = model.get_layer("layer2").get_weights()
+
+    print("\nLearned parameters:")
     print("Layer 1 weights:\n", W1)
     print("Layer 1 bias:\n", b1)
     print("Layer 2 weights:\n", W2)
     print("Layer 2 bias:\n", b2)
+
+    # Evaluate the model on the test set
+    X_test_scaled = normalization_layer(X_test)
+    y_test_prob = model.predict(X_test_scaled)
+    accuracy = compute_accuracy(y_test, y_test_prob)
+
+    print("\nEvaluation on the test set:")
+    print(f"Accuracy: {accuracy:.3f}")  # 0.550
 
     # Test cars: same specifications, but different price
     test_cars = np.array([
@@ -382,8 +385,10 @@ def main():
     test_cars_scaled = normalization_layer(test_cars)
 
     # Predict, if the user will buy each car
-    predictions = model.predict(test_cars_scaled)
-    decisions = (predictions >= 0.5).astype(int)
+    probs = model.predict(test_cars_scaled)
+    decisions = (probs >= 0.5).astype(int)
+
+    print("\nPredictions for test cars:")
     print(f"Cheap car       -> buy={decisions[0]}")  # 1 = yes
     print(f"Expensive car   -> buy={decisions[1]}")  # 0 = no
     print(f"Average car     -> buy={decisions[2]}")  # 1 = yes

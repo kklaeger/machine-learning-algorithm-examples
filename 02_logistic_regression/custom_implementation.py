@@ -1,6 +1,9 @@
 import numpy as np
-from pathlib import Path
 import copy
+from pathlib import Path
+
+from utils.data_utils import split_data, load_data
+from utils.metrics import compute_cross_entropy_loss, compute_accuracy
 
 SEED = 42
 
@@ -11,24 +14,6 @@ np.set_printoptions(precision=2, suppress=True)
 
 BASE_DIR = Path(__file__).resolve().parent
 TRAINING_DATA_PATH = BASE_DIR / "data" / "training_data.csv"
-
-
-def load_training_data(file_path):
-    """
-    Loads training data from a CSV file and split it into features and target values.
-
-    Parameters:
-        file_path (str | Path): Path to the CSV training data file.
-
-    Returns:
-        X (np.ndarray): Feature matrix.
-        y (np.ndarray): True target values.
-    """
-    data = np.loadtxt(fname=file_path, delimiter=',', skiprows=1, dtype=float)
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    return X, y
 
 
 def sigmoid(z):
@@ -179,6 +164,25 @@ def scale_features(X):
     return X_scaled, mu, sigma
 
 
+def predict_scaled_proba(X, w, b, mu, sigma):
+    """
+    Predict the probabilities using learned weights and bias.
+
+        Parameters:
+        X (np.ndarray):     Feature matrix including bias term.
+        w (np.ndarray):     Weight vector.
+        b (float):          Bias term.
+        mu (np.ndarray):    Mean value of each feature.
+        sigma (np.ndarray): Standard deviation of each feature.
+    Returns:
+        predicted_value (np.ndarray):  The predicted probabilities.
+    """
+    X_scaled = (X - mu) / sigma
+    predicted_value = model_output(X_scaled, w, b)
+
+    return predicted_value
+
+
 def predict_scaled(X, w, b, mu, sigma, threshold=0.5):
     """
     Predict the binary class using learned weights and bias.
@@ -194,8 +198,7 @@ def predict_scaled(X, w, b, mu, sigma, threshold=0.5):
     Returns:
         predicted_value (np.ndarray):  Predicted class labels (0 or 1).
     """
-    X_scaled = (X - mu) / sigma
-    y_hat = model_output(X_scaled, w, b)
+    y_hat = predict_scaled_proba(X, w, b, mu, sigma)
 
     predicted_value = (y_hat >= threshold).astype(int)
 
@@ -204,10 +207,19 @@ def predict_scaled(X, w, b, mu, sigma, threshold=0.5):
 
 def main():
     # Load the training data from the CSV file
-    X, y = load_training_data(TRAINING_DATA_PATH)
+    X, y = load_data(TRAINING_DATA_PATH)
+
+    # Split the data into training and testing sets
+    X_train, y_train, X_test, y_test = split_data(
+        X,
+        y,
+        test_ratio=0.2,
+        seed=SEED,
+        shuffle=True
+    )
 
     # Scale features to improve the stability and convergence of gradient descent
-    X_scaled, mu, sigma = scale_features(X)
+    X_train_scaled, mu, sigma = scale_features(X_train)
 
     # Initialize the model parameters
     w_init = np.zeros(X.shape[1])
@@ -218,9 +230,19 @@ def main():
     iterations = 10000
 
     # Train model using gradient descent
-    w, b = gradient_descent(X_scaled, y, w_init, b_init, alpha, iterations)
-    print("Learned weights: w =", w)  # w = [-2.74 -0.45 -3.19  0.7  -1.96]
-    print(f"Learned bias: b = {b:.2f}")  # b = 0.18
+    w, b = gradient_descent(X_train_scaled, y_train, w_init, b_init, alpha, iterations)
+    print("\nLearned parameters:")
+    print("Weights: w =", w)  # w = [-2.74 -0.45 -3.19  0.7  -1.96]
+    print(f"Bias: b = {b:.2f}")  # b = 0.18
+
+    # Evaluate the model on the test set (Log Loss / Accuracy)
+    y_test_pred = predict_scaled_proba(X_test, w, b, mu, sigma)
+    log_loss = compute_cross_entropy_loss(y_test, y_test_pred)
+    accuracy = compute_accuracy(y_test, y_test_pred)
+
+    print("\nEvaluation on the test set:")
+    print(f"Log Loss: {log_loss:.4f}")  # 0.0876
+    print(f"Accuracy: {accuracy:.3f}")  # 1.000
 
     # Test cars: same specifications, but different price
     test_cars = np.array([
@@ -231,6 +253,7 @@ def main():
 
     # Predict, if the user will buy each car
     predictions = predict_scaled(test_cars, w, b, mu, sigma)
+    print("\nPredictions for test cars:")
     print(f"Cheap car       -> buy={predictions[0]}")  # 1 = yes
     print(f"Expensive car   -> buy={predictions[1]}")  # 0 = no
     print(f"Average car     -> buy={predictions[2]}")  # 1 = yes
