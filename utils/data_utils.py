@@ -7,22 +7,26 @@ DEFAULT_SEED = 42
 np.random.seed(DEFAULT_SEED)
 
 
-def load_data(file_path):
+def load_data(file_path, with_target=True):
     """
     Loads training data from a CSV file and split it into features and target values.
 
     Parameters:
         file_path (str | Path): Path to the CSV training data file.
+        with_target (bool):     Whether the last column is the target variable.
 
     Returns:
         X (np.ndarray): Feature matrix.
-        y (np.ndarray): True target values.
+        y (np.ndarray): True target values (if with_target is True).
     """
     data = np.loadtxt(fname=file_path, delimiter=',', skiprows=1, dtype=float)
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    return X, y
+    if with_target:
+        X = data[:, :-1]
+        y = data[:, -1]
+        return X, y
+    else:
+        X = data
+        return X
 
 
 def split_data(X, y, test_ratio=0.2, seed=DEFAULT_SEED, shuffle=True):

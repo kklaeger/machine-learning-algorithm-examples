@@ -34,7 +34,7 @@ def main():
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
 
-    # Define number oif iterations
+    # Define number of iterations
     iterations = 10000
 
     # Logistic Regression

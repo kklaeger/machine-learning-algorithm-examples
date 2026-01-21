@@ -11,7 +11,8 @@ evaluation.
 Utilities for loading and splitting tabular CSV datasets.
 
 - `load_training_data(file_path)`  
-  Loads a CSV file and returns feature matrix `X` and target vector `y` (last column is assumed to be the target).
+  Loads a CSV file and returns the feature matrix `X` and optionally the target vector `y` (last column is assumed to be
+  the target and is returned if requested).
 
 - `split_data(X, y, test_ratio=0.2, seed=42, shuffle=True)`  
   Deterministic train/test split for reproducible experiments. Returns `X_train, y_train, X_test, y_test`.

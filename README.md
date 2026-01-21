@@ -62,6 +62,15 @@ In this repository, two CNN examples are provided using TensorFlow:
 
 Additional algorithms may be added over time following the same structure and design principles.
 
+### [K-Means Clustering](05_k_means)
+
+K-Means clustering is an unsupervised learning algorithm used to group similar data points into clusters based on
+feature similarity.
+
+In this repository, both a custom implementation and a scikit-learn reference implementation are provided.
+
+**Example:** Segmenting customers into distinct groups based on purchasing behavior and demographics.
+
 ## Notes
 
 All examples in this repository use a fixed random seed (default: 42) to ensure reproducible results across runs and
