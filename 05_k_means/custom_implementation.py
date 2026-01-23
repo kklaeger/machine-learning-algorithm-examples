@@ -182,7 +182,7 @@ def compute_inertia(X, centroids, idx):
 
 
 def main():
-    # Load the training data from the CSV file and
+    # Load the training data from the CSV file
     X = load_data(TRAINING_DATA_PATH, with_target=False)
 
     # Scale features

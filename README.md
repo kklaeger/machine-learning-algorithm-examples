@@ -71,6 +71,16 @@ In this repository, both a custom implementation and a scikit-learn reference im
 
 **Example:** Segmenting customers into distinct groups based on purchasing behavior and demographics.
 
+### [Anomaly Detection](06_anomaly_detection)
+
+Anomaly detection is an unsupervised learning technique used to identify unusual or rare events in data that deviate
+from normal patterns.
+
+In this repository, both a custom implementation and a scikit-learn reference implementation are provided.
+
+**Example:** Detecting fraudulent credit card transactions based on transaction amount, time, location, and other
+features.
+
 ## Notes
 
 All examples in this repository use a fixed random seed (default: 42) to ensure reproducible results across runs and
