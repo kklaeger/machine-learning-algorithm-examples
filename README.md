@@ -81,6 +81,18 @@ In this repository, both a custom implementation and a scikit-learn reference im
 **Example:** Detecting fraudulent credit card transactions based on transaction amount, time, location, and other
 features.
 
+### [Recommender Systems](07_recommender_systems)
+
+Recommender systems are algorithms designed to suggest items to users based on their preferences and behavior.
+
+#### Collaborative Filtering
+
+Collaborative filtering is a popular approach for building recommender systems using user-item interaction data. The
+goal is to recommend items (e.g., songs, movies, products) to users based on the ratings or interactions of users who
+gave similar ratings to the same items.
+
+**Example:** Recommending songs to users based on their past ratings and the ratings of other users.
+
 ## Notes
 
 All examples in this repository use a fixed random seed (default: 42) to ensure reproducible results across runs and
