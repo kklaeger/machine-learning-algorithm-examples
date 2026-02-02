@@ -2,8 +2,9 @@ import numpy as np
 from pathlib import Path
 from sklearn.linear_model import SGDRegressor
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
-from utils.data_utils import load_data, split_data
+from utils.data_utils import load_data
 from utils.metrics import compute_mse_rmse
 
 SEED = 42
@@ -21,11 +22,11 @@ def main():
     X, y = load_data(TRAINING_DATA_PATH)
 
     # Split the data into training and testing sets
-    X_train, y_train, X_test, y_test = split_data(
+    X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
-        test_ratio=0.2,
-        seed=SEED,
+        test_size=0.2,
+        random_state=SEED,
         shuffle=True
     )
 
@@ -49,8 +50,8 @@ def main():
     w = model.coef_
     b = model.intercept_[0]
     print("Learned parameters:")
-    print("Weights: w =", w)  # w = [-2976.71 -3741.16  3784.52  -993.1]
-    print(f"Bias: b = {b:.2f}")  # b = 19684.45
+    print("Weights: w =", w)  # w = [-3194.22 -3857.84  3652.63 -1099.67]
+    print(f"Bias: b = {b:.2f}")  # b = 19895.80
 
     # Evaluate the model on the test set (MSE / RMSE)
     X_test_scaled = scaler.transform(X_test)
@@ -58,8 +59,8 @@ def main():
     test_mse, test_rmse = compute_mse_rmse(y_test, y_test_pred)
 
     print("\nEvaluation on the test set:")
-    print(f"MSE:  {test_mse:.2f}") # 1436868.78
-    print(f"RMSE: {test_rmse:.2f}") # 1198.69
+    print(f"MSE:  {test_mse:.2f}") # 2624124.16
+    print(f"RMSE: {test_rmse:.2f}") # 1619.91
 
     # Predict the price of a test car
     test_car = np.array([[80000, 5, 120, 1]])
@@ -67,7 +68,7 @@ def main():
     predicted_price = model.predict(test_car_scaled)
 
     print("\nPredicting price for test car with features:")
-    print(f"Predicted price: {predicted_price[0]:.2f}") # 20032.86
+    print(f"Predicted price: {predicted_price[0]:.2f}") # 20298.46
 
 
 if __name__ == "__main__":

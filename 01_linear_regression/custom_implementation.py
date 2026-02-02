@@ -191,21 +191,21 @@ def main():
     # Train model using gradient descent
     w, b = gradient_descent(X_train_scaled, y_train, w_init, b_init, alpha, iterations, lambda_reg)
     print("\nLearned parameters:")
-    print("Weights: w =", w)  # w = [-2977.26 -3740.68  3785.22  -992.96]
-    print(f"Bias: b = {b:.2f}")  # b = 19685.27
+    print("Weights: w =", w)  # w = [-3196.34 -3859.24  3657.75 -1100.73]
+    print(f"Bias: b = {b:.2f}")  # b = 19894.36
 
     # Evaluate the model on the test set (MSE / RMSE)
     y_test_pred = predict_scaled(X_test, w, b, mu, sigma)
     test_mse, test_rmse = compute_mse_rmse(y_test, y_test_pred)
     print("\nEvaluation on the test set:")
-    print(f"MSE:  {test_mse:.2f}")  # 1435317.24
-    print(f"RMSE: {test_rmse:.2f}")  # 1198.05
+    print(f"MSE:  {test_mse:.2f}")  # 2619737.38
+    print(f"RMSE: {test_rmse:.2f}")  # 1618.56
 
     # Predict the price of a test car
     test_car = np.array([80000, 5, 120, 1])
     predicted_price = predict_scaled(test_car, w, b, mu, sigma)
     print("\nPredicting price for test car with features:")
-    print(f"Predicted price: {predicted_price:.2f}")  # 20032.71
+    print(f"Predicted price: {predicted_price:.2f}")  # 20293.20
 
 
 if __name__ == "__main__":

@@ -54,13 +54,11 @@ def split_data(X, y, test_ratio=0.2, seed=DEFAULT_SEED, shuffle=True):
         raise ValueError("Features and labels must have the same number of samples")
 
     # Generate indices and shuffle if required
-    indices = np.arange(n)
-    if shuffle:
-        rng = np.random.default_rng(seed)
-        rng.shuffle(indices)
+    rng = np.random.RandomState(seed)
+    indices = rng.permutation(n) if shuffle else np.arange(n)
 
     # Determine the number of test samples and ensure at least one sample in test set if test_ratio > 0
-    test_count = int(round(n * test_ratio))
+    test_count = int(n * test_ratio)
     test_count = max(1, min(test_count, n - 1))
 
     # if user explicitly wants no test set

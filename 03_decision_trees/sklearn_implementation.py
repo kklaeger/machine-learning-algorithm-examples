@@ -1,8 +1,9 @@
 import numpy as np
 from pathlib import Path
 from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.model_selection import train_test_split
 
-from utils.data_utils import load_data, split_data
+from utils.data_utils import load_data
 from utils.metrics import compute_accuracy
 
 SEED = 42
@@ -20,13 +21,18 @@ def main():
     # Load training data
     X, y = load_data(TRAINING_DATA_PATH)
 
-    # Split the data into training and testing sets
-    X_train, y_train, X_test, y_test = split_data(
+    idx = np.arange(len(y))
+    idx_train, idx_test = train_test_split(idx, test_size=0.2, random_state=SEED, shuffle=True)
+    print("sklearn test idx:", np.sort(idx_test))
+
+    # Split the data into training and testing sets using sklearn
+    X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
-        test_ratio=0.2,
-        seed=SEED,
-        shuffle=True
+        test_size=0.2,
+        random_state=SEED,
+        shuffle=True,
+        stratify=y
     )
 
     # Decision Tree Classifier

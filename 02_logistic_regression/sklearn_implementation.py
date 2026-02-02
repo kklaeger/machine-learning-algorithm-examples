@@ -2,8 +2,9 @@ import numpy as np
 from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 
-from utils.data_utils import load_data, split_data
+from utils.data_utils import load_data
 from utils.metrics import compute_cross_entropy_loss, compute_accuracy
 
 SEED = 42
@@ -22,11 +23,11 @@ def main():
     X, y = load_data(TRAINING_DATA_PATH)
 
     # Split the data into training and testing sets
-    X_train, y_train, X_test, y_test = split_data(
+    X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
-        test_ratio=0.2,
-        seed=SEED,
+        test_size=0.2,
+        random_state=SEED,
         shuffle=True
     )
 
@@ -51,8 +52,8 @@ def main():
     w = model.coef_
     b = model.intercept_[0]
     print("Learned parameters:")
-    print("Weights: w =", w)  # w = [[-2.06 -0.39 -2.19  0.47 -1.56]]
-    print(f"Bias: b = {b:.2f}")  # b = 0.18
+    print("Weights: w =", w)  # w = [[-11.6   -7.33  -1.44   0.34 -15.91]]
+    print(f"Bias: b = {b:.2f}")  # b = 1.08
 
     # Evaluate the model on the test set (Log Loss / Accuracy)
     X_test_scaled = scaler.transform(X_test)
@@ -61,7 +62,7 @@ def main():
     accuracy = compute_accuracy(y_test, y_test_pred)
 
     print("\nEvaluation on the test set:")
-    print(f"Log Loss: {log_loss:.4f}")  # 0.1367
+    print(f"Log Loss: {log_loss:.4f}")  # 0.0114
     print(f"Accuracy: {accuracy:.3f}")  # 1.000
 
     # Test cars: same specifications, but different price

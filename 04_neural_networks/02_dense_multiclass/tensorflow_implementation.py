@@ -3,8 +3,9 @@ import tensorflow as tf
 from pathlib import Path
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
 
-from utils.data_utils import load_data, split_data
+from utils.data_utils import load_data
 from utils.metrics import compute_accuracy
 
 SEED = 42
@@ -24,11 +25,11 @@ def main():
     X, y = load_data(TRAINING_DATA_PATH)
 
     # Split the data into training and testing sets
-    X_train, y_train, X_test, y_test = split_data(
+    X_train, X_test, y_train, y_test = train_test_split(
         X,
         y,
-        test_ratio=0.2,
-        seed=SEED,
+        test_size=0.2,
+        random_state=SEED,
         shuffle=True
     )
 
@@ -81,7 +82,7 @@ def main():
     accuracy = compute_accuracy(y_test, y_test_prob)
 
     print("\nEvaluation on the test set:")
-    print(f"Accuracy: {accuracy:.3f}")  # e.g. 0.850
+    print(f"Accuracy: {accuracy:.3f}")  # e.g. 0.800
 
     # Test cars for multiclass price category prediction
     test_cars = np.array([

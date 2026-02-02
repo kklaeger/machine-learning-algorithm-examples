@@ -245,8 +245,8 @@ def main():
     # Train model using gradient descent
     w, b = gradient_descent(X_train_scaled, y_train, w_init, b_init, alpha, iterations, lambda_reg)
     print("\nLearned parameters:")
-    print("Weights: w =", w)  # w = [-2.74 -0.45 -3.19  0.7  -1.96]
-    print(f"Bias: b = {b:.2f}")  # b = 0.18
+    print("Weights: w =", w)  # w = [-2.65 -0.34 -3.26  0.64 -1.71]
+    print(f"Bias: b = {b:.2f}")  # b = 0.48
 
     # Evaluate the model on the test set (Log Loss / Accuracy)
     y_test_pred = predict_scaled_proba(X_test, w, b, mu, sigma)
@@ -254,8 +254,8 @@ def main():
     accuracy = compute_accuracy(y_test, y_test_pred)
 
     print("\nEvaluation on the test set:")
-    print(f"Log Loss: {log_loss:.4f}")  # 0.0876
-    print(f"Accuracy: {accuracy:.3f}")  # 1.000
+    print(f"Log Loss: {log_loss:.4f}")  # 0.1432
+    print(f"Accuracy: {accuracy:.3f}")  # 0.950
 
     # Test cars: same specifications, but different price
     test_cars = np.array([

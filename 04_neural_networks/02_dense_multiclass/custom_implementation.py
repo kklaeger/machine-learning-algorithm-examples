@@ -399,7 +399,7 @@ def main():
     accuracy = compute_accuracy(y_test, y_test_prob)
 
     print("\nEvaluation on the test set:")
-    print(f"Accuracy: {accuracy:.3f}")  # e.g. 0.900
+    print(f"Accuracy: {accuracy:.3f}")  # e.g. 0.750
 
     # Test cars for multiclass price category prediction
     test_cars = np.array([
