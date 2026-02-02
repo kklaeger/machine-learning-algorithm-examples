@@ -64,7 +64,7 @@ def compute_loss(y_hat, y):
     return loss
 
 
-def compute_cost(X, y, w, b):
+def compute_cost(X, y, w, b, lambda_reg=0.0):
     """
     Computes the cost for logistic regression (cross-entropy / log loss).
 
@@ -73,6 +73,7 @@ def compute_cost(X, y, w, b):
         y (np.ndarray):     True target values.
         w (np.ndarray):     Weight vector.
         b (float):          Bias term.
+        lambda_reg (float): Regularization parameter (default is 0.0, meaning no regularization).
 
     Returns:
         cost (float): The cost value.
@@ -82,10 +83,15 @@ def compute_cost(X, y, w, b):
     losses = compute_loss(y_hat, y)
     cost = np.mean(losses)
 
+    # Add regularization term if lambda_reg > 0
+    if lambda_reg > 0:
+        m = len(y)
+    cost += (lambda_reg / (2 * m)) * np.sum(w ** 2)
+
     return cost
 
 
-def compute_gradients(X, y, w, b):
+def compute_gradients(X, y, w, b, lambda_reg=0.0):
     """
     Computes the gradient of the MSE cost function for linear regression.
 
@@ -94,6 +100,7 @@ def compute_gradients(X, y, w, b):
         y (np.ndarray):     True target values.
         w (np.ndarray):     Weight vector.
         b (float):          Bias term.
+        lambda_reg (float): Regularization parameter (default is 0.0, meaning no regularization).
 
     Returns:
         dw (np.ndarray): Weight gradients.
@@ -107,10 +114,14 @@ def compute_gradients(X, y, w, b):
     dw = (1 / m) * (X.T @ errors)
     db = (1 / m) * np.sum(errors)
 
+    # Add regularization term if lambda_reg > 0
+    if lambda_reg > 0:
+        dw += (lambda_reg / m) * w
+
     return dw, db
 
 
-def gradient_descent(X, y, w_init, b_init, alpha, iterations):
+def gradient_descent(X, y, w_init, b_init, alpha, iterations, lambda_reg=0.0):
     """
     Performs batch gradient descent to learn weights and bias.
 
@@ -121,6 +132,7 @@ def gradient_descent(X, y, w_init, b_init, alpha, iterations):
         b_init (float):         Initial bias term.
         alpha (float):          Learning rate.
         iterations (int):       Number of iterations.
+        lambda_reg (float):     Regularization parameter (default is 0.0, meaning no regularization).
 
     Returns:
         w (np.ndarray): Learned weights.
@@ -131,12 +143,12 @@ def gradient_descent(X, y, w_init, b_init, alpha, iterations):
     b = b_init
 
     for i in range(iterations):
-        dw, db = compute_gradients(X, y, w, b)
+        dw, db = compute_gradients(X, y, w, b, lambda_reg)
 
         w = w - alpha * dw
         b = b - alpha * db
 
-        cost = compute_cost(X, y, w, b)
+        cost = compute_cost(X, y, w, b, lambda_reg)
 
         if i % print_every == 0:
             print(f"Iteration {i:4d} | Cost: {cost:.6e}")
@@ -225,12 +237,13 @@ def main():
     w_init = np.zeros(X.shape[1])
     b_init = 0.0
 
-    # Define learning rate and number oif iterations
+    # Define learning rate, number if iterations, and regularization parameter
     alpha = 1.0e-2
     iterations = 10000
+    lambda_reg = 0.01
 
     # Train model using gradient descent
-    w, b = gradient_descent(X_train_scaled, y_train, w_init, b_init, alpha, iterations)
+    w, b = gradient_descent(X_train_scaled, y_train, w_init, b_init, alpha, iterations, lambda_reg)
     print("\nLearned parameters:")
     print("Weights: w =", w)  # w = [-2.74 -0.45 -3.19  0.7  -1.96]
     print(f"Bias: b = {b:.2f}")  # b = 0.18

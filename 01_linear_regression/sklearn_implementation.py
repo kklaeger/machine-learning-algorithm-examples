@@ -36,10 +36,11 @@ def main():
     # Define number oif iterations
     iterations = 1000
 
-    # Linear regression trained via gradient descent
+    # Linear regression trained via gradient descent and L2 regularization
     model = SGDRegressor(
         max_iter=iterations,
-        random_state=SEED
+        random_state=SEED,
+        alpha=0.001,
     )
 
     # Train model using gradient descent

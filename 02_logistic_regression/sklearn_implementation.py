@@ -34,13 +34,15 @@ def main():
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
 
-    # Define number of iterations
+    # Define number of iterations and regularization parameter
     iterations = 10000
+    lambda_reg = 0.01
 
     # Logistic Regression
     model = LogisticRegression(
         max_iter=iterations,
-        random_state=SEED
+        random_state=SEED,
+        C=1.0 / lambda_reg,
     )
 
     # Train model
