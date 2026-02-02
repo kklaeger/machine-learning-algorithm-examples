@@ -93,6 +93,15 @@ gave similar ratings to the same items.
 
 **Example:** Recommending songs to users based on their past ratings and the ratings of other users.
 
+#### Content-Based Filtering
+
+Content-based filtering is an approach for building recommender systems using explicit user and item features. The goal
+is to recommend items (e.g., songs, movies, products) to users based on how well the item content matches the user's
+preferences, without relying on other users' ratings.
+
+**Example:** Recommending songs to users based on song features (e.g., genre, tempo) and user preferences (e.g., age,
+favorite genres).
+
 ## Notes
 
 All examples in this repository use a fixed random seed (default: 42) to ensure reproducible results across runs and

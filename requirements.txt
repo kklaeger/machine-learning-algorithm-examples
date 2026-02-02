@@ -4,3 +4,4 @@ scikit-learn
 tensorflow
 tensorflow-datasets
 matplotlib
+pandas
