@@ -9,6 +9,20 @@ For some algorithms, a custom implementation is provided for learning purposes, 
 using established libraries such as scikit-learn or TensorFlow. The custom implementations are not optimized for
 production use. Their purpose is clarity and understanding, not performance.
 
+## Overview
+
+The following table summarizes the algorithms included in this repository:
+
+| #  | Algorithm           | Learning Type | Task Type         | Custom Implementation | Reference Implementation |
+|----|---------------------|---------------|-------------------|-----------------------|--------------------------|
+| 01 | Linear Regression   | Supervised    | Regression        | Yes                   | scikit-learn             |
+| 02 | Logistic Regression | Supervised    | Classification    | Yes                   | scikit-learn             |
+| 03 | Decision Trees      | Supervised    | Classification    | Yes                   | scikit-learn             |
+| 04 | Neural Networks     | Supervised    | Classification    | Yes                   | TensorFlow               |
+| 05 | K-Means Clustering  | Unsupervised  | Clustering        | Yes                   | scikit-learn             |
+| 06 | Anomaly Detection   | Unsupervised  | Anomaly Detection | Yes                   | scikit-learn             |
+| 07 | Recommender Systems | Supervised    | Recommendation    | No                    | TensorFlow               | 
+
 ## Algorithms
 
 ### [Linear Regression](01_linear_regression)
