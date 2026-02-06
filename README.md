@@ -13,15 +13,16 @@ production use. Their purpose is clarity and understanding, not performance.
 
 The following table summarizes the algorithms included in this repository:
 
-| #  | Algorithm           | Learning Type | Task Type         | Custom Implementation | Reference Implementation |
-|----|---------------------|---------------|-------------------|-----------------------|--------------------------|
-| 01 | Linear Regression   | Supervised    | Regression        | Yes                   | scikit-learn             |
-| 02 | Logistic Regression | Supervised    | Classification    | Yes                   | scikit-learn             |
-| 03 | Decision Trees      | Supervised    | Classification    | Yes                   | scikit-learn             |
-| 04 | Neural Networks     | Supervised    | Classification    | Yes                   | TensorFlow               |
-| 05 | K-Means Clustering  | Unsupervised  | Clustering        | Yes                   | scikit-learn             |
-| 06 | Anomaly Detection   | Unsupervised  | Anomaly Detection | Yes                   | scikit-learn             |
-| 07 | Recommender Systems | Supervised    | Recommendation    | No                    | TensorFlow               | 
+| #  | Algorithm              | Learning Type | Task Type         | Custom Implementation | Reference Implementation |
+|----|------------------------|---------------|-------------------|-----------------------|--------------------------|
+| 01 | Linear Regression      | Supervised    | Regression        | Yes                   | scikit-learn             |
+| 02 | Logistic Regression    | Supervised    | Classification    | Yes                   | scikit-learn             |
+| 03 | Decision Trees         | Supervised    | Classification    | Yes                   | scikit-learn             |
+| 04 | Neural Networks        | Supervised    | Classification    | Yes                   | TensorFlow               |
+| 05 | K-Means Clustering     | Unsupervised  | Clustering        | Yes                   | scikit-learn             |
+| 06 | Anomaly Detection      | Unsupervised  | Anomaly Detection | Yes                   | scikit-learn             |
+| 07 | Recommender Systems    | Supervised    | Recommendation    | No                    | TensorFlow               | 
+| 08 | Reinforcement Learning | Reinforcement | Control           | No                    | TensorFlow               |
 
 ## Algorithms
 
@@ -115,6 +116,18 @@ preferences, without relying on other users' ratings.
 
 **Example:** Recommending songs to users based on song features (e.g., genre, tempo) and user preferences (e.g., age,
 favorite genres).
+
+### [Reinforcement Learning](08_reinforment_learning)
+
+Reinforcement learning is a type of machine learning where an agent learns to make decisions by interacting with an
+environment and receiving feedback in the form of rewards or penalties.
+
+In this repository, two examples of reinforcement learning algorithms are provided using TensorFlow:
+
+- **Deep Q-Network (DQN):** A discrete action space algorithm that learns to approximate the optimal action-value
+  function using a neural network.
+- **Deep Deterministic Policy Gradient (DDPG):** A continuous action space algorithm that uses separate actor and critic
+  networks to learn a deterministic policy.
 
 ## Notes
 
